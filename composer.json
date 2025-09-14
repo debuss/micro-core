@@ -1,0 +1,27 @@
+{
+  "name": "micro/core",
+  "description": "A tiny micro-service application core.",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Core\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Alexandre Debusschère",
+      "email": "alexandre.debusschere@hey.com"
+    }
+  ],
+  "require": {
+    "php": "^8.3",
+    "borschphp/config": "^1.0",
+    "debuss-a/problem-details": "^1.0",
+    "laminas/laminas-diactoros": "^3.6",
+    "laminas/laminas-stratigility": "^4.2",
+    "laminas/laminas-httphandlerrunner": "^2.12",
+    "league/container": "^5.1",
+    "league/route": "^6.2",
+    "monolog/monolog": "^3.9"
+  }
+}
