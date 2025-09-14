@@ -1,5 +1,5 @@
 {
-  "name": "micro/core",
+  "name": "micro-service/core",
   "description": "A tiny micro-service application core.",
   "license": "MIT",
   "autoload": {
