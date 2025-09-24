@@ -3,13 +3,24 @@
 namespace Core\Container\ServiceProvider;
 
 use Closure;
-use Laminas\Diactoros\{ResponseFactory, ServerRequestFactory};
+use Laminas\Diactoros\{RequestFactory,
+    ResponseFactory,
+    ServerRequestFactory,
+    StreamFactory,
+    UploadedFileFactory,
+    UriFactory};
 use Laminas\HttpHandlerRunner\Emitter\{EmitterInterface, SapiEmitter};
 use Laminas\HttpHandlerRunner\{RequestHandlerRunner, RequestHandlerRunnerInterface};
 use Laminas\Stratigility\MiddlewarePipe;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\{ResponseFactoryInterface, ServerRequestInterface};
+use Psr\Http\Message\{RequestFactoryInterface,
+    ResponseFactoryInterface,
+    ServerRequestFactoryInterface,
+    ServerRequestInterface,
+    StreamFactoryInterface,
+    UploadedFileFactoryInterface,
+    UriFactoryInterface};
 use Throwable;
 
 class HttpServiceProvider extends AbstractServiceProvider
@@ -24,6 +35,11 @@ class HttpServiceProvider extends AbstractServiceProvider
         return in_array($id, [
             ServerRequestInterface::class,
             ResponseFactoryInterface::class,
+            RequestFactoryInterface::class,
+            ServerRequestFactoryInterface::class,
+            StreamFactoryInterface::class,
+            UriFactoryInterface::class,
+            UploadedFileFactoryInterface::class,
             RequestHandlerRunnerInterface::class,
             MiddlewarePipe::class,
             SapiEmitter::class
@@ -42,6 +58,26 @@ class HttpServiceProvider extends AbstractServiceProvider
         $this
             ->getContainer()
             ->add(ResponseFactoryInterface::class, ResponseFactory::class);
+
+        $this
+            ->getContainer()
+            ->add(RequestFactoryInterface::class, RequestFactory::class);
+
+        $this
+            ->getContainer()
+            ->add(ServerRequestFactoryInterface::class, ServerRequestFactory::class);
+
+        $this
+            ->getContainer()
+            ->add(StreamFactoryInterface::class, StreamFactory::class);
+
+        $this
+            ->getContainer()
+            ->add(UriFactoryInterface::class, UriFactory::class);
+
+        $this
+            ->getContainer()
+            ->add(UploadedFileFactoryInterface::class, UploadedFileFactory::class);
 
         $this
             ->getContainer()
