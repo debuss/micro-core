@@ -15,7 +15,7 @@
   ],
   "require": {
     "php": "^8.3",
-    "borschphp/config": "^1.0",
+    "borschphp/config": "^1.2",
     "debuss-a/problem-details": "^1.0",
     "laminas/laminas-diactoros": "^3.6",
     "laminas/laminas-stratigility": "^4.2",
