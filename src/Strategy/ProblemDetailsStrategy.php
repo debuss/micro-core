@@ -54,27 +54,7 @@ class ProblemDetailsStrategy extends JsonStrategy
 
         $parameters = [];
         if (is_array($controller) && is_object($controller[0])) {
-            $method = new ReflectionMethod($controller[0], $controller[1]);
-            foreach ($method->getParameters() as $param) {
-                if ($param->hasType() && $param->getType()->getName() === ServerRequestInterface::class) {
-                    $parameters[] = $request;
-                } elseif ($param->hasType() && $param->getType()->isBuiltin()) {
-                    $parameters[] = $request->getAttribute(
-                        $param->getName(),
-                        $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null
-                    );
-                } elseif ($param->hasType() && $this->getContainer()->has($param->getType()->getName())) {
-                    $parameters[] = $this->getContainer()->get($param->getType()->getName());
-                } elseif ($param->hasType() && isset($request->getAttributes()[$param->getName()])) {
-                    $parameters[] = $request->getAttribute($param->getName());
-                } elseif (!$param->hasType() && isset($request->getAttributes()[$param->getName()])) {
-                    $parameters[] = $request->getAttribute($param->getName());
-                } elseif ($param->isDefaultValueAvailable()) {
-                    $parameters[] = $param->getDefaultValue();
-                } else {
-                    $parameters[] = $param->getName();
-                }
-            }
+            $parameters = $this->getHandlerParameters($controller, $request);
         }
 
         $response = call_user_func_array($controller, $parameters);
@@ -86,6 +66,41 @@ class ProblemDetailsStrategy extends JsonStrategy
         }
 
         return $this->decorateResponse($response);
+    }
+
+    /**
+     * @param array<object, string> $controller
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
+     */
+    private function getHandlerParameters(array $controller, ServerRequestInterface $request): array
+    {
+        $parameters = [];
+
+        $method = new ReflectionMethod($controller[0], $controller[1]);
+        foreach ($method->getParameters() as $param) {
+            if ($param->hasType() && $param->getType()->getName() === ServerRequestInterface::class) {
+                $parameters[] = $request;
+            } elseif ($param->hasType() && $param->getType()->isBuiltin()) {
+                $parameters[] = $request->getAttribute(
+                    $param->getName(),
+                    $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null
+                );
+            } elseif ($param->hasType() && $this->getContainer()->has($param->getType()->getName())) {
+                $parameters[] = $this->getContainer()->get($param->getType()->getName());
+            } elseif ($param->hasType() && isset($request->getAttributes()[$param->getName()])) {
+                $parameters[] = $request->getAttribute($param->getName());
+            } elseif (!$param->hasType() && isset($request->getAttributes()[$param->getName()])) {
+                $parameters[] = $request->getAttribute($param->getName());
+            } elseif ($param->isDefaultValueAvailable()) {
+                $parameters[] = $param->getDefaultValue();
+            } else {
+                $parameters[] = $param->getName();
+            }
+        }
+
+        return $parameters;
     }
 
     public function getThrowableHandler(): MiddlewareInterface
